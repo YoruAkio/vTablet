@@ -91,7 +91,7 @@ class WsClient {
     var uri = Uri.parse("ws://$host$path");
 
     Map<String, dynamic> headers = {};
-    headers['origin'] = 'https://vtablet.teages.xyz';
+    headers['origin'] = 'https://vtablet.yoruakio.xyz';
     _setState(WsConnectionState.pending);
     if (kIsWeb) {
       channel = WebSocketChannel.connect(uri);

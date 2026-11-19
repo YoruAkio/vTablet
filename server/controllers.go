@@ -52,7 +52,7 @@ func connectFactory(screeUid string) websocket.Handler {
 	return websocket.Handler(func(c *websocket.Conn) {
 		if c.Config().Origin != nil {
 			origin := c.Config().Origin.Host
-			allows := "http://localhost:23052\n" + "https://vtablet.teages.xyz\n"
+			allows := "http://localhost:23052\n" + "https://vtablet.yoruakio.xyz\n" + "https://vtablet.teages.xyz\n"
 			if origin != "" && !strings.Contains(allows, origin) &&
 				!strings.HasPrefix(origin, "192.168.") &&
 				!strings.HasPrefix(origin, "10.") &&
@@ -68,5 +68,5 @@ func connectFactory(screeUid string) websocket.Handler {
 }
 
 func clientPage(w http.ResponseWriter, r *http.Request) {
-	http.Redirect(w, r, "https://vtablet.teages.xyz", http.StatusFound)
+	http.Redirect(w, r, "https://vtablet.yoruakio.xyz", http.StatusFound)
 }

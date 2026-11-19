@@ -55,7 +55,7 @@ func init() {
 	adbClient = a
 	AutoConnect(func(serial string) {
 		Exec("-s", serial, "reverse", "tcp:23052", "tcp:23052")
-		Exec("-s", serial, "shell", "am", "start", "-a", "android.intent.action.VIEW", "-d", "http://vtablet.teages.xyz?server=localhost:23052")
+		Exec("-s", serial, "shell", "am", "start", "-a", "android.intent.action.VIEW", "-d", "http://vtablet.yoruakio.xyz?server=localhost:23052")
 	})
 }
 

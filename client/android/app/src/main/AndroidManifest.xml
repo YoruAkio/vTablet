@@ -33,8 +33,10 @@
                 <action android:name="android.intent.action.VIEW" />
                 <category android:name="android.intent.category.DEFAULT" />
                 <category android:name="android.intent.category.BROWSABLE" />
+                <data android:scheme="http" android:host="vtablet.yoruakio.xyz" />
+                <data android:scheme="https" android:host="vtablet.yoruakio.xyz" />
                 <data android:scheme="http" android:host="vtablet.teages.xyz" />
-                <data android:scheme="https" />
+                <data android:scheme="https" android:host="vtablet.teages.xyz" />
             </intent-filter>
         </activity>
         <!-- Don't delete the meta-data below.
