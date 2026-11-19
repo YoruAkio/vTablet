@@ -65,19 +65,29 @@ func pointerServices(screeUid string, c *websocket.Conn) {
 					code := protocol.Abs(motionCode)
 					switch code {
 					case protocol.AbsX:
-						logger.Log("x %d", motionValue)
+						if *verbose {
+							logger.Log("x %d", motionValue)
+						}
 						pd.X = int32(motionValue)
 					case protocol.AbsY:
-						logger.Log("y %d", motionValue)
+						if *verbose {
+							logger.Log("y %d", motionValue)
+						}
 						pd.Y = int32(motionValue)
 					case protocol.AbsPressure:
-						logger.Log("pressure %d", motionValue)
+						if *verbose {
+							logger.Log("pressure %d", motionValue)
+						}
 						pd.Pressure = uint32(motionValue)
 					case protocol.AbsTiltX:
-						logger.Log("TiltX %d", motionValue)
+						if *verbose {
+							logger.Log("TiltX %d", motionValue)
+						}
 						pd.TiltX = int32(motionValue)
 					case protocol.AbsTiltY:
-						logger.Log("TiltY %d", motionValue)
+						if *verbose {
+							logger.Log("TiltY %d", motionValue)
+						}
 						pd.TiltY = int32(motionValue)
 					default:
 						logger.Error("Unknown abs code: %d", code)

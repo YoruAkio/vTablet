@@ -28,6 +28,10 @@ func initWebServices(port int) {
 	for _, screen := range pointer.GetScreens() {
 		http.Handle(fmt.Sprintf("/digi/%s", screen.Uid), connectFactory(screen.Uid))
 	}
+	http.HandleFunc("/digi/", func(w http.ResponseWriter, r *http.Request) {
+		uid := strings.TrimPrefix(r.URL.Path, "/digi/")
+		connectFactory(uid).ServeHTTP(w, r)
+	})
 
 	addr := fmt.Sprintf("0.0.0.0:%d", port)
 	log.Printf("Starting vTablet web service on %s", addr)

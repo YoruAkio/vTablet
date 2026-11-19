@@ -13,6 +13,7 @@ import (
 
 var (
 	headless = flag.Bool("headless", false, "Run in headless mode without system tray")
+	verbose  = flag.Bool("verbose", false, "Enable verbose logging for pointer packets")
 )
 
 func main() {

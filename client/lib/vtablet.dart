@@ -103,7 +103,9 @@ class VTabletPage extends StatelessWidget {
 
     int pointerX = screenToDigi(rawX, offsetX, ariaWidth, boxWidth);
     int pointerY = screenToDigi(rawY, offsetY, ariaHeight, boxHeight);
-    int pressure = event.down ? (8192 * rawPressure).toInt() : 0;
+    int pressure = event.down
+        ? (rawPressure > 0 ? (8192 * rawPressure).toInt() : 4096)
+        : 0;
 
     double tiltX = rawTilt * math.cos(rawOrientation) * 90;
     double tiltY = rawTilt * math.sin(rawOrientation) * 90;

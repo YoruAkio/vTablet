@@ -35,12 +35,9 @@ const (
 
 	SYN_REPORT = 0x00
 
-	BTN_LEFT     = 0x110
-	BTN_RIGHT    = 0x111
-	BTN_TOOL_PEN = 0x140
-	BTN_TOUCH    = 0x14a
-	BTN_STYLUS   = 0x14b
-	BTN_STYLUS2  = 0x14c
+	BTN_LEFT   = 0x110
+	BTN_RIGHT  = 0x111
+	BTN_MIDDLE = 0x112
 
 	ABS_X        = 0x00
 	ABS_Y        = 0x01
@@ -51,7 +48,7 @@ const (
 	INPUT_PROP_POINTER = 0x00
 	BUS_VIRTUAL        = 0x06
 
-	DeviceName = "vtablet-digitizer"
+	DeviceName = "vtablet-pointer"
 )
 
 type uinputSetup struct {
@@ -244,15 +241,12 @@ func Create(screenUid string) *AbsPointer {
 	ioctl(fd, UI_SET_EVBIT, EV_KEY)
 	ioctl(fd, UI_SET_EVBIT, EV_ABS)
 
-	// Enable keys
+	// Enable buttons for absolute mouse pointer
 	ioctl(fd, UI_SET_KEYBIT, BTN_LEFT)
 	ioctl(fd, UI_SET_KEYBIT, BTN_RIGHT)
-	ioctl(fd, UI_SET_KEYBIT, BTN_TOOL_PEN)
-	ioctl(fd, UI_SET_KEYBIT, BTN_TOUCH)
-	ioctl(fd, UI_SET_KEYBIT, BTN_STYLUS)
-	ioctl(fd, UI_SET_KEYBIT, BTN_STYLUS2)
+	ioctl(fd, UI_SET_KEYBIT, BTN_MIDDLE)
 
-	// Set indirect pointer property (allows cursor movement across desktop/window managers)
+	// Set indirect pointer property so Wayland compositors (Mango, Hyprland, Sway) attach to cursor
 	ioctl(fd, UI_SET_PROPBIT, INPUT_PROP_POINTER)
 
 	// Set ABS axes
@@ -301,9 +295,9 @@ func Create(screenUid string) *AbsPointer {
 		return &AbsPointer{screenUid: screenUid, backend: nil}
 	}
 
-	logger.Log("Created uinput virtual digitizer: %s for screen %s (%s)", DeviceName, targetScreen.Uid, targetScreen.Name)
+	logger.Log("Created uinput virtual digitizer pointer: %s for screen %s (%s)", DeviceName, targetScreen.Uid, targetScreen.Name)
 
-	// Hyprland output mapping (non-fatal)
+	// Output mapping (Hyprland if present, non-fatal)
 	if targetScreen.Name != "" {
 		exec.Command("hyprctl", "keyword", fmt.Sprintf("device[%s]:output", DeviceName), targetScreen.Name).Run()
 	}
@@ -317,20 +311,6 @@ func Create(screenUid string) *AbsPointer {
 	}
 }
 
-func (b *linuxUinputBackend) emit(evType uint16, code uint16, value int32) {
-	if b.file == nil {
-		return
-	}
-	ev := inputEvent{
-		Type:  evType,
-		Code:  code,
-		Value: value,
-	}
-	var buf bytes.Buffer
-	binary.Write(&buf, binary.LittleEndian, ev)
-	b.file.Write(buf.Bytes())
-}
-
 func (b *linuxUinputBackend) Update(x, y int32, pressure uint32, tiltX, tiltY int32) error {
 	b.mu.Lock()
 	defer b.mu.Unlock()
@@ -339,7 +319,7 @@ func (b *linuxUinputBackend) Update(x, y int32, pressure uint32, tiltX, tiltY in
 		return nil
 	}
 
-	// Clamp coordinates
+	// Clamp coordinates to 0..32767
 	if x < 0 {
 		x = 0
 	} else if x > 32767 {
@@ -351,30 +331,39 @@ func (b *linuxUinputBackend) Update(x, y int32, pressure uint32, tiltX, tiltY in
 		y = 32767
 	}
 
-	// Emit absolute position
-	b.emit(EV_ABS, ABS_X, x)
-	b.emit(EV_ABS, ABS_Y, y)
+	var buf bytes.Buffer
+	emit := func(evType, code uint16, value int32) {
+		ev := inputEvent{
+			Type:  evType,
+			Code:  code,
+			Value: value,
+		}
+		binary.Write(&buf, binary.LittleEndian, ev)
+	}
 
-	// Tool in-range
-	b.emit(EV_KEY, BTN_TOOL_PEN, 1)
+	// Emit absolute position (warps cursor across desktop / osu!)
+	emit(EV_ABS, ABS_X, x)
+	emit(EV_ABS, ABS_Y, y)
 
+	// Note: We use BTN_LEFT (not BTN_TOUCH) so libinput treats this as an absolute
+	// mouse/pointer rather than a touchscreen, allowing cursor dragging and drawing.
 	if pressure > 0 {
-		b.emit(EV_KEY, BTN_TOUCH, 1)
-		b.emit(EV_KEY, BTN_LEFT, 1)
-		b.emit(EV_ABS, ABS_PRESSURE, int32(pressure))
+		emit(EV_KEY, BTN_LEFT, 1)
+		emit(EV_ABS, ABS_PRESSURE, int32(pressure))
 	} else {
-		b.emit(EV_KEY, BTN_TOUCH, 0)
-		b.emit(EV_KEY, BTN_LEFT, 0)
-		b.emit(EV_ABS, ABS_PRESSURE, 0)
+		emit(EV_KEY, BTN_LEFT, 0)
+		emit(EV_ABS, ABS_PRESSURE, 0)
 	}
 
 	tX := int32(float64(tiltX) * 90.0 / 32767.0)
 	tY := int32(float64(tiltY) * 90.0 / 32767.0)
-	b.emit(EV_ABS, ABS_TILT_X, tX)
-	b.emit(EV_ABS, ABS_TILT_Y, tY)
+	emit(EV_ABS, ABS_TILT_X, tX)
+	emit(EV_ABS, ABS_TILT_Y, tY)
 
-	b.emit(EV_SYN, SYN_REPORT, 0)
-	return nil
+	emit(EV_SYN, SYN_REPORT, 0)
+
+	_, err := b.file.Write(buf.Bytes())
+	return err
 }
 
 func (b *linuxUinputBackend) Destroy() {
@@ -386,15 +375,17 @@ func (b *linuxUinputBackend) Destroy() {
 	}
 	b.closed = true
 
-	// Lift pen and release buttons
-	b.emit(EV_KEY, BTN_TOUCH, 0)
-	b.emit(EV_KEY, BTN_LEFT, 0)
-	b.emit(EV_KEY, BTN_TOOL_PEN, 0)
-	b.emit(EV_SYN, SYN_REPORT, 0)
+	// Release buttons
+	var buf bytes.Buffer
+	evLeft := inputEvent{Type: EV_KEY, Code: BTN_LEFT, Value: 0}
+	evSyn := inputEvent{Type: EV_SYN, Code: SYN_REPORT, Value: 0}
+	binary.Write(&buf, binary.LittleEndian, evLeft)
+	binary.Write(&buf, binary.LittleEndian, evSyn)
+	b.file.Write(buf.Bytes())
 
 	fd := int(b.file.Fd())
 	ioctl(fd, UI_DEV_DESTROY, 0)
 	b.file.Close()
 	b.file = nil
-	logger.Log("Destroyed uinput virtual digitizer")
+	logger.Log("Destroyed uinput virtual pointer")
 }
