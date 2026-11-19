@@ -1,3 +1,5 @@
+//go:build (linux && cgo) || windows || darwin
+
 package main
 
 import (
@@ -88,6 +90,7 @@ func onConnected() {
 func onNoConnected() {
 	systray.SetIcon(AppIconData_Disconnected)
 }
+
 func openBrowser(url string) {
 	var err error
 
@@ -104,5 +107,4 @@ func openBrowser(url string) {
 	if err != nil {
 		log.Fatal(err)
 	}
-
 }

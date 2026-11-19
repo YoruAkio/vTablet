@@ -1,2 +1,5 @@
 ./dist/**
 /vscode
+server/vtablet
+server/vtablet.exe
+server/build/

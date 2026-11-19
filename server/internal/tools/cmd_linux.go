@@ -12,8 +12,13 @@ import (
 
 func RunCommand(path string, args ...string) {
 	exePath := strings.TrimSpace(path)
-	e := exec.Command(exePath, args...)
-	logger.Log("Running: %s %s", exePath, strings.Join(args, " "))
+	var finalArgs []string
+	for _, arg := range args {
+		parts := strings.Fields(arg)
+		finalArgs = append(finalArgs, parts...)
+	}
+	e := exec.Command(exePath, finalArgs...)
+	logger.Log("Running: %s %s", exePath, strings.Join(finalArgs, " "))
 	e.Stdout = os.Stdout
 	e.Stderr = os.Stderr
 	err := e.Run()
