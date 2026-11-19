@@ -1,8 +1,10 @@
 name: Build Flutter Client (Android)
 
 on: 
-  # pull:
-  #   branches: [main]
+  push:
+    branches: [main]
+  pull_request:
+    branches: [main]
   workflow_dispatch:
 
 jobs:
@@ -24,11 +26,14 @@ jobs:
       - run: flutter pub get
 
       # Build Android
-      - run: flutter build apk
-      - run: flutter build appbundle
+      - name: Build Android APK
+        run: flutter build apk --release
+      - name: Build Android AppBundle
+        run: flutter build appbundle --release
 
-      # Sign Android
+      # Optional Sign Android (only if signing secrets are provided)
       - name: Setup build tool version variable
+        if: ${{ secrets.SIGNING_KEY != '' }}
         shell: bash
         run: |
           BUILD_TOOL_VERSION=$(ls /usr/local/lib/android/sdk/build-tools/ | tail -n 1)
@@ -36,6 +41,7 @@ jobs:
           echo Last build tool version is: $BUILD_TOOL_VERSION
       - uses: r0adkll/sign-android-release@v1
         name: Sign app APK
+        if: ${{ secrets.SIGNING_KEY != '' }}
         id: sign_apk
         with:
           releaseDirectory: client/build/app/outputs/flutter-apk
@@ -45,18 +51,6 @@ jobs:
           keyPassword: ${{ secrets.KEY_PASSWORD }}
         env:
           BUILD_TOOLS_VERSION: ${{ env.BUILD_TOOL_VERSION }}
-      # - uses: r0adkll/sign-android-release@v1
-      #   name: Sign app AAB
-      #   # ID used to access action output
-      #   id: sign_aab
-      #   with:
-      #     releaseDirectory: client/build/app/outputs/bundle/release
-      #     signingKeyBase64: ${{ secrets.SIGNING_KEY }}
-      #     alias: ${{ secrets.ALIAS }}
-      #     keyStorePassword: ${{ secrets.KEY_PASSWORD }}
-      #     keyPassword: ${{ secrets.KEY_PASSWORD }}
-      #   env:
-      #     BUILD_TOOLS_VERSION: "30.0.2"
       
       - uses: actions/upload-artifact@v4
         with:
@@ -67,6 +61,7 @@ jobs:
           name: vTablet_client_aab
           path: client/build/app/outputs/bundle/release/app-release.aab
       - uses: actions/upload-artifact@v4
+        if: ${{ secrets.SIGNING_KEY != '' && steps.sign_apk.outputs.signedReleaseFile != '' }}
         with:
           name: vTablet_client_apk_signed
-          path: ${{steps.sign_apk.outputs.signedReleaseFile}}
+          path: ${{ steps.sign_apk.outputs.signedReleaseFile }}

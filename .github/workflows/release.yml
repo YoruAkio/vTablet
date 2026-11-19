@@ -1,0 +1,255 @@
+name: Release All Targets
+
+on:
+  workflow_dispatch:
+    inputs:
+      tag_name:
+        description: 'Release Tag (leave blank for date vYYYY.MM.DD)'
+        required: false
+        default: ''
+  push:
+    tags:
+      - 'v*'
+
+jobs:
+  build-android:
+    name: Build Android Client
+    runs-on: ubuntu-latest
+    defaults:
+      run:
+        working-directory: ./client
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-java@v4
+        with:
+          distribution: 'microsoft'
+          java-version: '17'
+      - uses: subosito/flutter-action@v2
+        with:
+          channel: 'stable'
+          flutter-version: 3.27.1
+      - run: flutter pub get
+
+      - name: Build Android APK
+        run: flutter build apk --release
+
+      - name: Build Android AppBundle
+        run: flutter build appbundle --release
+
+      - name: Setup build tool version variable
+        if: ${{ secrets.SIGNING_KEY != '' }}
+        shell: bash
+        run: |
+          BUILD_TOOL_VERSION=$(ls /usr/local/lib/android/sdk/build-tools/ | tail -n 1)
+          echo "BUILD_TOOL_VERSION=$BUILD_TOOL_VERSION" >> $GITHUB_ENV
+
+      - name: Sign app APK (Optional)
+        if: ${{ secrets.SIGNING_KEY != '' }}
+        uses: r0adkll/sign-android-release@v1
+        id: sign_apk
+        with:
+          releaseDirectory: client/build/app/outputs/flutter-apk
+          signingKeyBase64: ${{ secrets.SIGNING_KEY }}
+          alias: ${{ secrets.ALIAS }}
+          keyStorePassword: ${{ secrets.KEY_PASSWORD }}
+          keyPassword: ${{ secrets.KEY_PASSWORD }}
+        env:
+          BUILD_TOOLS_VERSION: ${{ env.BUILD_TOOL_VERSION }}
+
+      - name: Prepare Android Release Assets
+        shell: bash
+        run: |
+          mkdir -p ../release-android
+          if [ -n "${{ steps.sign_apk.outputs.signedReleaseFile }}" ] && [ -f "${{ steps.sign_apk.outputs.signedReleaseFile }}" ]; then
+            cp "${{ steps.sign_apk.outputs.signedReleaseFile }}" ../release-android/vTablet-client-android.apk
+          else
+            cp build/app/outputs/flutter-apk/app-release.apk ../release-android/vTablet-client-android.apk
+          fi
+          cp build/app/outputs/bundle/release/app-release.aab ../release-android/vTablet-client-android.aab
+
+      - uses: actions/upload-artifact@v4
+        with:
+          name: release-android
+          path: release-android/*
+
+  build-linux:
+    name: Build Linux Server
+    runs-on: ubuntu-latest
+    defaults:
+      run:
+        working-directory: ./server
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-go@v5
+        with:
+          go-version: '1.22'
+          check-latest: true
+      - name: Install Linux GUI dependencies
+        run: |
+          sudo apt-get update
+          sudo apt-get install -y libayatana-appindicator3-dev libgtk-3-dev
+      - name: Build Linux amd64 (GUI with Tray)
+        run: |
+          mkdir -p build
+          CGO_ENABLED=1 GOOS=linux GOARCH=amd64 go build -ldflags="-s -w" -o build/vtablet-linux-amd64 .
+      - name: Build Linux amd64 (Headless)
+        run: |
+          CGO_ENABLED=0 GOOS=linux GOARCH=amd64 go build -ldflags="-s -w" -o build/vtablet-linux-headless-amd64 .
+      - name: Package Linux release archives
+        shell: bash
+        run: |
+          mkdir -p ../release-linux
+          # Copy standalone binaries
+          cp build/vtablet-linux-amd64 ../release-linux/vtablet-linux-amd64
+          cp build/vtablet-linux-headless-amd64 ../release-linux/vtablet-linux-headless-amd64
+
+          # Package GUI tarball (binary + udev rules + systemd service + readme)
+          mkdir -p /tmp/pkg-gui
+          cp build/vtablet-linux-amd64 /tmp/pkg-gui/vtablet
+          cp 99-vtablet.rules vtablet.service /tmp/pkg-gui/
+          cp ../README.md /tmp/pkg-gui/
+          tar -czvf ../release-linux/vtablet-linux-amd64.tar.gz -C /tmp/pkg-gui .
+          rm -rf /tmp/pkg-gui
+
+          # Package Headless tarball (binary + udev rules + systemd service + readme)
+          mkdir -p /tmp/pkg-headless
+          cp build/vtablet-linux-headless-amd64 /tmp/pkg-headless/vtablet
+          cp 99-vtablet.rules vtablet.service /tmp/pkg-headless/
+          cp ../README.md /tmp/pkg-headless/
+          tar -czvf ../release-linux/vtablet-linux-headless-amd64.tar.gz -C /tmp/pkg-headless .
+          rm -rf /tmp/pkg-headless
+
+      - uses: actions/upload-artifact@v4
+        with:
+          name: release-linux
+          path: release-linux/*
+
+  build-windows:
+    name: Build Windows Server
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - name: Build Windows
+        uses: crazy-max/ghaction-xgo@v3
+        with:
+          xgo_version: latest
+          go_version: latest
+          dest: build
+          prefix: vtablet
+          targets: windows/amd64,windows/386
+          v: true
+          x: true
+          race: false
+          ldflags: -H=windowsgui -s -w
+          buildmode: default
+          trimpath: true
+          working_dir: ./server
+
+      - name: Run UPX
+        uses: crazy-max/ghaction-upx@v3
+        with:
+          version: latest
+          files: |
+            server/build/*.exe
+          args: --best
+
+      - name: Package Windows release archives
+        shell: bash
+        run: |
+          mkdir -p release-windows
+          cp server/build/vtablet-windows-amd64.exe release-windows/vtablet-windows-amd64.exe
+          cp server/build/vtablet-windows-386.exe release-windows/vtablet-windows-386.exe
+          cd release-windows
+          zip -9 vtablet-windows-amd64.zip vtablet-windows-amd64.exe
+          zip -9 vtablet-windows-386.zip vtablet-windows-386.exe
+
+      - uses: actions/upload-artifact@v4
+        with:
+          name: release-windows
+          path: release-windows/*
+
+  create-release:
+    name: Create GitHub Release
+    needs: [build-android, build-linux, build-windows]
+    runs-on: ubuntu-latest
+    permissions:
+      contents: write
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+
+      - name: Determine Release Tag
+        id: release_tag
+        shell: bash
+        run: |
+          if [ -n "${{ github.event.inputs.tag_name }}" ]; then
+            TAG="${{ github.event.inputs.tag_name }}"
+          elif [[ "${{ github.ref }}" == refs/tags/* ]]; then
+            TAG="${{ github.ref_name }}"
+          else
+            git fetch --tags || true
+            DATE_TAG=$(date +'%Y.%m.%d')
+            TAG="v${DATE_TAG}"
+            if git rev-parse "$TAG" >/dev/null 2>&1; then
+              TAG="v${DATE_TAG}.${{ github.run_number }}"
+            fi
+          fi
+          echo "tag=$TAG" >> $GITHUB_OUTPUT
+          echo "Release tag: $TAG"
+
+      - name: Download all build artifacts
+        uses: actions/download-artifact@v4
+        with:
+          path: downloaded-artifacts
+
+      - name: Prepare Release Directory & Checksums
+        shell: bash
+        run: |
+          mkdir -p dist
+          find downloaded-artifacts -type f -exec cp {} dist/ \;
+          cd dist
+          sha256sum * > SHA256SUMS.txt
+          echo "Release assets prepared:"
+          ls -lh
+          cd ..
+
+      - name: Generate Release Notes
+        shell: bash
+        run: |
+          TAG="${{ steps.release_tag.outputs.tag }}"
+          cat << 'EOF' > release_notes.md
+          ## vTablet Release $TAG
+
+          ### 📱 Android Client
+          - **`vTablet-client-android.apk`**: Direct Android APK installable on phones and tablets.
+          - **`vTablet-client-android.aab`**: Android App Bundle.
+
+          ### 🐧 Linux Server (Wayland / X11 / Mango WM / Hyprland)
+          - **`vtablet-linux-amd64.tar.gz`**: Linux 64-bit with System Tray / GUI support (includes binary, udev rules, systemd service, and instructions).
+          - **`vtablet-linux-headless-amd64.tar.gz`**: Linux 64-bit Headless / Zero-CGO (pure Go, no GUI/CGO libraries needed).
+          - **`vtablet-linux-amd64`**: Standalone Linux GUI binary.
+          - **`vtablet-linux-headless-amd64`**: Standalone Linux Headless binary.
+
+          ### 🪟 Windows Server
+          - **`vtablet-windows-amd64.zip`**: Windows 64-bit executable (zipped).
+          - **`vtablet-windows-386.zip`**: Windows 32-bit executable (zipped).
+          - **`vtablet-windows-amd64.exe`**: Windows 64-bit standalone executable.
+          - **`vtablet-windows-386.exe`**: Windows 32-bit standalone executable.
+
+          ### 🔒 Checksums
+          Refer to `SHA256SUMS.txt` for SHA-256 integrity verification of all release files.
+          EOF
+          sed -i "s/\$TAG/$TAG/g" release_notes.md
+
+      - name: Publish GitHub Release
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+        shell: bash
+        run: |
+          TAG="${{ steps.release_tag.outputs.tag }}"
+          gh release create "$TAG" \
+            --title "vTablet $TAG" \
+            --notes-file release_notes.md \
+            --target "${{ github.sha }}" \
+            dist/*
