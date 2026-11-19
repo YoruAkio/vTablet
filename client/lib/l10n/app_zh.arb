@@ -6,9 +6,13 @@
   "aboutGithubBtn": "访问项目 GitHub 仓库",
 
   "appearancePageTitle": "外观",
-  "appearancePageContext": "外观设置正在准备中",
+  "appearancePageContext": "外观与语言设置",
+  "appearanceLanguageTitle": "语言",
+  "appearanceLanguageSystem": "跟随系统",
+  "appearanceLanguageEn": "English",
+  "appearanceLanguageId": "Bahasa Indonesia",
+  "appearanceLanguageZh": "中文",
 
-  
   "connectionPageTitle": "连接",
   "connectionFirstTitle": "连接服务器",
   "connectionServer": "服务器",
@@ -48,10 +52,10 @@
   "controlInputIgnoreClick": "忽略压力信息",
   "controlOtherTitle": "其他设置",
   "controlPreventSleep": "阻止手机/平板休眠",
-  
+
   "clickAgainToExit": "再点一次以退出",
   "lostConnect": "与服务器断开连接",
-  "connectFirstPlease": "请先连接",
+  "connectFirstPlease": "请先连接服务器",
 
   "succeedConnected": "找到服务器: {url}",
   "@succeedConnected": {
@@ -71,6 +75,6 @@
       }
     }
   },
-  
+
   "helpBtn": "帮助文档"
 }

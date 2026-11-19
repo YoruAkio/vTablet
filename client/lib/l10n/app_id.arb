@@ -1,0 +1,80 @@
+{
+  "aboutPageTitle": "Tentang",
+  "aboutSoftwareInfoTitle": "Informasi Perangkat Lunak",
+  "aboutUpdateCheckTitle": "Periksa Pembaruan",
+  "aboutDonateTitle": "Donasi",
+  "aboutGithubBtn": "Kunjungi Repositori GitHub",
+
+  "appearancePageTitle": "Tampilan",
+  "appearancePageContext": "Pengaturan Tampilan",
+  "appearanceLanguageTitle": "Bahasa",
+  "appearanceLanguageSystem": "Default Sistem",
+  "appearanceLanguageEn": "English",
+  "appearanceLanguageId": "Bahasa Indonesia",
+  "appearanceLanguageZh": "中文 (Tionghoa)",
+
+  "connectionPageTitle": "Koneksi",
+  "connectionFirstTitle": "Hubungkan ke Server",
+  "connectionServer": "Server",
+  "connectionConnectBtn": "Hubungkan",
+  "connectionDisconnectBtn": "Putuskan",
+  "connectionState": "Status Koneksi",
+  "connectionStateConnected": "Terhubung",
+  "connectionStateDisconnected": "Terputus",
+  "connectionMonitor": "Layar {uid}: {width}x{height}",
+  "@connectionMonitor": {
+    "placeholders": {
+      "uid": {
+        "type": "String",
+        "example": "ffffff"
+      },
+      "width": {
+        "type": "int",
+        "example": "1920"
+      },
+      "height": {
+        "type": "int",
+        "example": "1080"
+      }
+    }
+  },
+  "connectionReconnectBtn": "Hubungkan Ulang",
+
+  "controlPageTitle": "Kontrol",
+  "controlAriaTitle": "Area Input",
+  "controlAriaScaleLabel": "Skala",
+  "controlAriaOffsetXLabel": "Pergeseran X",
+  "controlAriaOffsetYLabel": "Pergeseran Y",
+  "controlInputTypeTitle": "Tipe Input",
+  "controlInputTypenamePen": "Pena",
+  "controlInputTypenameTouch": "Sentuhan",
+  "controlInputTypenameMouse": "Mouse",
+  "controlInputIgnoreClick": "Abaikan Input Tekanan",
+  "controlOtherTitle": "Pengaturan Lainnya",
+  "controlPreventSleep": "Cegah Perangkat Tidur",
+
+  "clickAgainToExit": "Tekan sekali lagi untuk keluar.",
+  "lostConnect": "Terputus dari server",
+  "connectFirstPlease": "Silakan hubungkan ke server terlebih dahulu",
+
+  "succeedConnected": "Server ditemukan: {url}",
+  "@succeedConnected": {
+    "placeholders": {
+      "url": {
+        "type": "String",
+        "example": "localhost"
+      }
+    }
+  },
+  "failedConnected": "Server tidak merespons: {url}",
+  "@failedConnected": {
+    "placeholders": {
+      "url": {
+        "type": "String",
+        "example": "localhost"
+      }
+    }
+  },
+
+  "helpBtn": "Dokumentasi Bantuan"
+}

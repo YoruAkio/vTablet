@@ -1,20 +1,24 @@
 {
   "aboutPageTitle": "About",
-  "aboutSoftwareInfoTitle": "App Info",
+  "aboutSoftwareInfoTitle": "Software Info",
   "aboutUpdateCheckTitle": "Update Check",
   "aboutDonateTitle": "Donate",
-  "aboutGithubBtn": "Visit GitHub repo",
+  "aboutGithubBtn": "Visit GitHub Repository",
 
   "appearancePageTitle": "Appearance",
-  "appearancePageContext": "Apprarance is not ready yet",
+  "appearancePageContext": "Appearance Settings",
+  "appearanceLanguageTitle": "Language",
+  "appearanceLanguageSystem": "System Default",
+  "appearanceLanguageEn": "English",
+  "appearanceLanguageId": "Bahasa Indonesia",
+  "appearanceLanguageZh": "中文 (Chinese)",
 
-  
   "connectionPageTitle": "Connection",
-  "connectionFirstTitle": "Connect to server",
+  "connectionFirstTitle": "Connect to Server",
   "connectionServer": "Server",
   "connectionConnectBtn": "Connect",
   "connectionDisconnectBtn": "Disconnect",
-  "connectionState": "Connect State",
+  "connectionState": "Connection State",
   "connectionStateConnected": "Connected",
   "connectionStateDisconnected": "Disconnected",
   "connectionMonitor": "Monitor {uid}: {width}x{height}",
@@ -36,8 +40,8 @@
   },
   "connectionReconnectBtn": "Reconnect",
 
-  "controlPageTitle": "Control",
-  "controlAriaTitle": "Input Aria",
+  "controlPageTitle": "Controls",
+  "controlAriaTitle": "Input Area",
   "controlAriaScaleLabel": "Scale",
   "controlAriaOffsetXLabel": "Offset X",
   "controlAriaOffsetYLabel": "Offset Y",
@@ -45,14 +49,14 @@
   "controlInputTypenamePen": "Pen",
   "controlInputTypenameTouch": "Touch",
   "controlInputTypenameMouse": "Mouse",
-  "controlInputIgnoreClick": "Ignore pressure input",
-  "controlOtherTitle": "Other",
-  "controlPreventSleep": "Prevent phone/tablet from sleeping",
-  
-  "clickAgainToExit": "Click again to exit.",
-  "lostConnect": "Disconnected to server",
-  "connectFirstPlease": "Please connect first",
-  
+  "controlInputIgnoreClick": "Ignore Pressure Input",
+  "controlOtherTitle": "Other Settings",
+  "controlPreventSleep": "Prevent Device from Sleeping",
+
+  "clickAgainToExit": "Press back again to exit.",
+  "lostConnect": "Disconnected from server",
+  "connectFirstPlease": "Please connect to server first",
+
   "succeedConnected": "Server found: {url}",
   "@succeedConnected": {
     "placeholders": {
@@ -72,5 +76,5 @@
     }
   },
 
-  "helpBtn": "Help"
+  "helpBtn": "Help Documentation"
 }

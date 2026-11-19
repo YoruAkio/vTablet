@@ -7,6 +7,7 @@ class Configs {
       _initState<String>("server.host", serverHostSaved.get());
 
   static final preventSleep = _initConfig<bool>("other.preventSleep", true);
+  static final appLanguage = _initConfig<String>("app.language", "system");
 
   static final screenUidSaved = _initConfig<String>("aria.screenId", "");
   static final screenUid = _initState<String>("aria.screenId", "");
