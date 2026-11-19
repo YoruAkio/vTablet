@@ -36,33 +36,28 @@ jobs:
       - name: Build Android AppBundle
         run: flutter build appbundle --release
 
-      - name: Setup build tool version variable
-        if: ${{ secrets.SIGNING_KEY != '' }}
-        shell: bash
-        run: |
-          BUILD_TOOL_VERSION=$(ls /usr/local/lib/android/sdk/build-tools/ | tail -n 1)
-          echo "BUILD_TOOL_VERSION=$BUILD_TOOL_VERSION" >> $GITHUB_ENV
-
-      - name: Sign app APK (Optional)
-        if: ${{ secrets.SIGNING_KEY != '' }}
-        uses: r0adkll/sign-android-release@v1
-        id: sign_apk
-        with:
-          releaseDirectory: client/build/app/outputs/flutter-apk
-          signingKeyBase64: ${{ secrets.SIGNING_KEY }}
-          alias: ${{ secrets.ALIAS }}
-          keyStorePassword: ${{ secrets.KEY_PASSWORD }}
-          keyPassword: ${{ secrets.KEY_PASSWORD }}
+      - name: Prepare & Sign Android Release Assets
         env:
-          BUILD_TOOLS_VERSION: ${{ env.BUILD_TOOL_VERSION }}
-
-      - name: Prepare Android Release Assets
+          SIGNING_KEY: ${{ secrets.SIGNING_KEY }}
+          ALIAS: ${{ secrets.ALIAS }}
+          KEY_PASSWORD: ${{ secrets.KEY_PASSWORD }}
         shell: bash
         run: |
           mkdir -p ../release-android
-          if [ -n "${{ steps.sign_apk.outputs.signedReleaseFile }}" ] && [ -f "${{ steps.sign_apk.outputs.signedReleaseFile }}" ]; then
-            cp "${{ steps.sign_apk.outputs.signedReleaseFile }}" ../release-android/vTablet-client-android.apk
+          if [ -n "$SIGNING_KEY" ]; then
+            echo "Signing release APK..."
+            echo "$SIGNING_KEY" | base64 -d > signingKey.jks
+            BUILD_TOOL_VERSION=$(ls /usr/local/lib/android/sdk/build-tools/ | tail -n 1)
+            /usr/local/lib/android/sdk/build-tools/$BUILD_TOOL_VERSION/apksigner sign \
+              --ks signingKey.jks \
+              --ks-key-alias "$ALIAS" \
+              --ks-pass "pass:$KEY_PASSWORD" \
+              --out ../release-android/vTablet-client-android.apk \
+              build/app/outputs/flutter-apk/app-release.apk
+            rm -f signingKey.jks
+            echo "APK successfully signed."
           else
+            echo "No SIGNING_KEY secret provided. Using default release APK."
             cp build/app/outputs/flutter-apk/app-release.apk ../release-android/vTablet-client-android.apk
           fi
           cp build/app/outputs/bundle/release/app-release.aab ../release-android/vTablet-client-android.aab
@@ -181,12 +176,16 @@ jobs:
 
       - name: Determine Release Tag
         id: release_tag
+        env:
+          INPUT_TAG: ${{ github.event.inputs.tag_name }}
+          REF_NAME: ${{ github.ref_name }}
+          REF: ${{ github.ref }}
         shell: bash
         run: |
-          if [ -n "${{ github.event.inputs.tag_name }}" ]; then
-            TAG="${{ github.event.inputs.tag_name }}"
-          elif [[ "${{ github.ref }}" == refs/tags/* ]]; then
-            TAG="${{ github.ref_name }}"
+          if [ -n "$INPUT_TAG" ]; then
+            TAG="$INPUT_TAG"
+          elif [[ "$REF" == refs/tags/* ]]; then
+            TAG="$REF_NAME"
           else
             git fetch --tags || true
             DATE_TAG=$(date +'%Y.%m.%d')
