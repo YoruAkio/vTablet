@@ -26,12 +26,20 @@ func initTray(onExit func()) {
 		systray.SetTitle("vTablet")
 		systray.SetTooltip("vTablet")
 
+		mWebClient := systray.AddMenuItem("Open Web Client", "Open vTablet Web Client in browser")
+		go func() {
+			for {
+				<-mWebClient.ClickedCh
+				openBrowser("https://vtablet.yoruakio.xyz?server=localhost:23052")
+			}
+		}()
+
 		mAbout := systray.AddMenuItem(fmt.Sprint(appName, " ", appVersion), "About")
 
 		go func() {
 			for {
 				<-mAbout.ClickedCh
-				openBrowser("https://github.com/Teages/vTablet")
+				openBrowser("https://github.com/YoruAkio/vTablet")
 			}
 		}()
 

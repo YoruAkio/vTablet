@@ -24,7 +24,7 @@ class Configs {
   static final inputEnableMouse =
       _initConfig<bool>("input.enable.mouse", false);
 
-  static final inputIgnoreClick = _initConfig<bool>("input.ignoreClick", false);
+  static final inputIgnoreClick = _initConfig<bool>("input.ignoreClick", true);
 
   static final delay = _initState("delay", -1);
 

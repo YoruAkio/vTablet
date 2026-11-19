@@ -12,7 +12,7 @@ import (
 const (
 	AppPackage  = "xyz.teages.vtablet"
 	AppActivity = "xyz.teages.vtablet/.MainActivity"
-	ClientUrl   = "http://vtablet.yoruakio.xyz?server=localhost:23052"
+	ClientUrl   = "https://vtablet.yoruakio.xyz?server=localhost:23052"
 )
 
 var (
