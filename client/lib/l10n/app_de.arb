@@ -1,0 +1,86 @@
+{
+  "aboutPageTitle": "Über",
+  "aboutSoftwareInfoTitle": "Software-Info",
+  "aboutUpdateCheckTitle": "Nach Updates suchen",
+  "aboutDonateTitle": "Spenden",
+  "aboutGithubBtn": "GitHub-Repository besuchen",
+
+  "appearancePageTitle": "Erscheinungsbild",
+  "appearancePageContext": "Erscheinungsbild-Einstellungen",
+  "appearanceLanguageTitle": "Sprache",
+  "appearanceLanguageSystem": "Systemstandard",
+  "appearanceLanguageEn": "English (Englisch)",
+  "appearanceLanguageId": "Bahasa Indonesia (Indonesisch)",
+  "appearanceLanguageZh": "中文 (Chinesisch)",
+  "appearanceLanguageRu": "Русский (Russisch)",
+  "appearanceLanguagePt": "Português (Portugiesisch)",
+  "appearanceLanguageJa": "日本語 (Japanisch)",
+  "appearanceLanguageFr": "Français (Französisch)",
+  "appearanceLanguageDe": "Deutsch",
+  "appearanceLanguagePl": "Polski (Polnisch)",
+
+  "connectionPageTitle": "Verbindung",
+  "connectionFirstTitle": "Mit Server verbinden",
+  "connectionServer": "Server",
+  "connectionConnectBtn": "Verbinden",
+  "connectionDisconnectBtn": "Trennen",
+  "connectionState": "Verbindungsstatus",
+  "connectionStateConnected": "Verbunden",
+  "connectionStateDisconnected": "Getrennt",
+  "connectionMonitor": "Monitor {uid}: {width}x{height}",
+  "@connectionMonitor": {
+    "placeholders": {
+      "uid": {
+        "type": "String",
+        "example": "ffffff"
+      },
+      "width": {
+        "type": "int",
+        "example": "1920"
+      },
+      "height": {
+        "type": "int",
+        "example": "1080"
+      }
+    }
+  },
+  "connectionReconnectBtn": "Neu verbinden",
+
+  "controlPageTitle": "Steuerung",
+  "controlAriaTitle": "Eingabebereich",
+  "controlAriaScaleLabel": "Skalierung",
+  "controlAriaOffsetXLabel": "Versatz X",
+  "controlAriaOffsetYLabel": "Versatz Y",
+  "controlInputTypeTitle": "Eingabetyp",
+  "controlInputTypenamePen": "Stift",
+  "controlInputTypenameTouch": "Touch",
+  "controlInputTypenameMouse": "Maus",
+  "controlInputIgnoreClick": "Druckeingabe ignorieren",
+  "controlOtherTitle": "Weitere Einstellungen",
+  "controlPreventSleep": "Ruhezustand verhindern",
+
+  "clickAgainToExit": "Erneut Zurück drücken zum Beenden.",
+  "lostConnect": "Verbindung zum Server verloren",
+  "connectFirstPlease": "Bitte zuerst mit Server verbinden",
+
+  "succeedConnected": "Server gefunden: {url}",
+  "@succeedConnected": {
+    "placeholders": {
+      "url": {
+        "type": "String",
+        "example": "localhost"
+      }
+    }
+  },
+  "failedConnected": "Server antwortet nicht: {url}",
+  "@failedConnected": {
+    "placeholders": {
+      "url": {
+        "type": "String",
+        "example": "localhost"
+      }
+    }
+  },
+
+  "helpBtn": "Hilfedokumentation"
+}

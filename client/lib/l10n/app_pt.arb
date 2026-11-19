@@ -1,0 +1,86 @@
+{
+  "aboutPageTitle": "Sobre",
+  "aboutSoftwareInfoTitle": "Informações do Software",
+  "aboutUpdateCheckTitle": "Verificar Atualizações",
+  "aboutDonateTitle": "Doar",
+  "aboutGithubBtn": "Visitar Repositório GitHub",
+
+  "appearancePageTitle": "Aparência",
+  "appearancePageContext": "Configurações de Aparência",
+  "appearanceLanguageTitle": "Idioma",
+  "appearanceLanguageSystem": "Padrão do Sistema",
+  "appearanceLanguageEn": "English (Inglês)",
+  "appearanceLanguageId": "Bahasa Indonesia (Indonésio)",
+  "appearanceLanguageZh": "中文 (Chinês)",
+  "appearanceLanguageRu": "Русский (Russo)",
+  "appearanceLanguagePt": "Português (Brasil)",
+  "appearanceLanguageJa": "日本語 (Japonês)",
+  "appearanceLanguageFr": "Français (Francês)",
+  "appearanceLanguageDe": "Deutsch (Alemão)",
+  "appearanceLanguagePl": "Polski (Polonês)",
+
+  "connectionPageTitle": "Conexão",
+  "connectionFirstTitle": "Conectar ao Servidor",
+  "connectionServer": "Servidor",
+  "connectionConnectBtn": "Conectar",
+  "connectionDisconnectBtn": "Desconectar",
+  "connectionState": "Estado da Conexão",
+  "connectionStateConnected": "Conectado",
+  "connectionStateDisconnected": "Desconectado",
+  "connectionMonitor": "Monitor {uid}: {width}x{height}",
+  "@connectionMonitor": {
+    "placeholders": {
+      "uid": {
+        "type": "String",
+        "example": "ffffff"
+      },
+      "width": {
+        "type": "int",
+        "example": "1920"
+      },
+      "height": {
+        "type": "int",
+        "example": "1080"
+      }
+    }
+  },
+  "connectionReconnectBtn": "Reconectar",
+
+  "controlPageTitle": "Controles",
+  "controlAriaTitle": "Área de Entrada",
+  "controlAriaScaleLabel": "Escala",
+  "controlAriaOffsetXLabel": "Deslocamento X",
+  "controlAriaOffsetYLabel": "Deslocamento Y",
+  "controlInputTypeTitle": "Tipo de Entrada",
+  "controlInputTypenamePen": "Caneta",
+  "controlInputTypenameTouch": "Toque",
+  "controlInputTypenameMouse": "Mouse",
+  "controlInputIgnoreClick": "Ignorar Entrada de Pressão",
+  "controlOtherTitle": "Outras Configurações",
+  "controlPreventSleep": "Prevenir Suspensão do Dispositivo",
+
+  "clickAgainToExit": "Pressione voltar novamente para sair.",
+  "lostConnect": "Desconectado do servidor",
+  "connectFirstPlease": "Por favor, conecte-se ao servidor primeiro",
+
+  "succeedConnected": "Servidor encontrado: {url}",
+  "@succeedConnected": {
+    "placeholders": {
+      "url": {
+        "type": "String",
+        "example": "localhost"
+      }
+    }
+  },
+  "failedConnected": "Servidor não está respondendo: {url}",
+  "@failedConnected": {
+    "placeholders": {
+      "url": {
+        "type": "String",
+        "example": "localhost"
+      }
+    }
+  },
+
+  "helpBtn": "Documentação de Ajuda"
+}

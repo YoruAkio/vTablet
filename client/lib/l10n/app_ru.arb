@@ -1,0 +1,86 @@
+{
+  "aboutPageTitle": "О программе",
+  "aboutSoftwareInfoTitle": "Информация о ПО",
+  "aboutUpdateCheckTitle": "Проверка обновлений",
+  "aboutDonateTitle": "Поддержать",
+  "aboutGithubBtn": "Репозиторий на GitHub",
+
+  "appearancePageTitle": "Внешний вид",
+  "appearancePageContext": "Настройки внешнего вида",
+  "appearanceLanguageTitle": "Язык",
+  "appearanceLanguageSystem": "Системный по умолчанию",
+  "appearanceLanguageEn": "English (Английский)",
+  "appearanceLanguageId": "Bahasa Indonesia (Индонезийский)",
+  "appearanceLanguageZh": "中文 (Китайский)",
+  "appearanceLanguageRu": "Русский",
+  "appearanceLanguagePt": "Português (Португальский)",
+  "appearanceLanguageJa": "日本語 (Японский)",
+  "appearanceLanguageFr": "Français (Французский)",
+  "appearanceLanguageDe": "Deutsch (Немецкий)",
+  "appearanceLanguagePl": "Polski (Польский)",
+
+  "connectionPageTitle": "Подключение",
+  "connectionFirstTitle": "Подключение к серверу",
+  "connectionServer": "Сервер",
+  "connectionConnectBtn": "Подключиться",
+  "connectionDisconnectBtn": "Отключиться",
+  "connectionState": "Статус подключения",
+  "connectionStateConnected": "Подключено",
+  "connectionStateDisconnected": "Отключено",
+  "connectionMonitor": "Монитор {uid}: {width}x{height}",
+  "@connectionMonitor": {
+    "placeholders": {
+      "uid": {
+        "type": "String",
+        "example": "ffffff"
+      },
+      "width": {
+        "type": "int",
+        "example": "1920"
+      },
+      "height": {
+        "type": "int",
+        "example": "1080"
+      }
+    }
+  },
+  "connectionReconnectBtn": "Переподключиться",
+
+  "controlPageTitle": "Управление",
+  "controlAriaTitle": "Рабочая область",
+  "controlAriaScaleLabel": "Масштаб",
+  "controlAriaOffsetXLabel": "Смещение по X",
+  "controlAriaOffsetYLabel": "Смещение по Y",
+  "controlInputTypeTitle": "Тип ввода",
+  "controlInputTypenamePen": "Перо",
+  "controlInputTypenameTouch": "Касание",
+  "controlInputTypenameMouse": "Мышь",
+  "controlInputIgnoreClick": "Игнорировать силу нажатия",
+  "controlOtherTitle": "Другие настройки",
+  "controlPreventSleep": "Запретить спящий режим",
+
+  "clickAgainToExit": "Нажмите назад ещё раз для выхода.",
+  "lostConnect": "Связь с сервером потеряна",
+  "connectFirstPlease": "Сначала подключитесь к серверу",
+
+  "succeedConnected": "Сервер найден: {url}",
+  "@succeedConnected": {
+    "placeholders": {
+      "url": {
+        "type": "String",
+        "example": "localhost"
+      }
+    }
+  },
+  "failedConnected": "Сервер не отвечает: {url}",
+  "@failedConnected": {
+    "placeholders": {
+      "url": {
+        "type": "String",
+        "example": "localhost"
+      }
+    }
+  },
+
+  "helpBtn": "Документация и помощь"
+}

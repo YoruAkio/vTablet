@@ -1,0 +1,86 @@
+{
+  "aboutPageTitle": "詳細情報",
+  "aboutSoftwareInfoTitle": "ソフトウェア情報",
+  "aboutUpdateCheckTitle": "アップデートの確認",
+  "aboutDonateTitle": "寄付",
+  "aboutGithubBtn": "GitHubリポジトリを表示",
+
+  "appearancePageTitle": "外観",
+  "appearancePageContext": "外観設定",
+  "appearanceLanguageTitle": "言語",
+  "appearanceLanguageSystem": "システム言語",
+  "appearanceLanguageEn": "English (英語)",
+  "appearanceLanguageId": "Bahasa Indonesia (インドネシア語)",
+  "appearanceLanguageZh": "中文 (中国語)",
+  "appearanceLanguageRu": "Русский (ロシア語)",
+  "appearanceLanguagePt": "Português (ポルトガル語)",
+  "appearanceLanguageJa": "日本語",
+  "appearanceLanguageFr": "Français (フランス語)",
+  "appearanceLanguageDe": "Deutsch (ドイツ語)",
+  "appearanceLanguagePl": "Polski (ポーランド語)",
+
+  "connectionPageTitle": "接続",
+  "connectionFirstTitle": "サーバーに接続",
+  "connectionServer": "サーバー",
+  "connectionConnectBtn": "接続",
+  "connectionDisconnectBtn": "切断",
+  "connectionState": "接続状態",
+  "connectionStateConnected": "接続済み",
+  "connectionStateDisconnected": "未接続",
+  "connectionMonitor": "モニター {uid}: {width}x{height}",
+  "@connectionMonitor": {
+    "placeholders": {
+      "uid": {
+        "type": "String",
+        "example": "ffffff"
+      },
+      "width": {
+        "type": "int",
+        "example": "1920"
+      },
+      "height": {
+        "type": "int",
+        "example": "1080"
+      }
+    }
+  },
+  "connectionReconnectBtn": "再接続",
+
+  "controlPageTitle": "操作設定",
+  "controlAriaTitle": "入力エリア",
+  "controlAriaScaleLabel": "スケール",
+  "controlAriaOffsetXLabel": "オフセット X",
+  "controlAriaOffsetYLabel": "オフセット Y",
+  "controlInputTypeTitle": "入力タイプ",
+  "controlInputTypenamePen": "ペン",
+  "controlInputTypenameTouch": "タッチ",
+  "controlInputTypenameMouse": "マウス",
+  "controlInputIgnoreClick": "筆圧入力を無効化",
+  "controlOtherTitle": "その他の設定",
+  "controlPreventSleep": "スリープを防止",
+
+  "clickAgainToExit": "もう一度戻るを押すと終了します。",
+  "lostConnect": "サーバーから切断されました",
+  "connectFirstPlease": "先にサーバーに接続してください",
+
+  "succeedConnected": "サーバーを検出: {url}",
+  "@succeedConnected": {
+    "placeholders": {
+      "url": {
+        "type": "String",
+        "example": "localhost"
+      }
+    }
+  },
+  "failedConnected": "サーバーが応答しません: {url}",
+  "@failedConnected": {
+    "placeholders": {
+      "url": {
+        "type": "String",
+        "example": "localhost"
+      }
+    }
+  },
+
+  "helpBtn": "ヘルプドキュメント"
+}

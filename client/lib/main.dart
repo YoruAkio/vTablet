@@ -39,6 +39,18 @@ class _AppState extends State<App> {
       _locale = const Locale('id');
     } else if (savedLang == 'zh') {
       _locale = const Locale('zh');
+    } else if (savedLang == 'ru') {
+      _locale = const Locale('ru');
+    } else if (savedLang == 'pt') {
+      _locale = const Locale('pt');
+    } else if (savedLang == 'ja') {
+      _locale = const Locale('ja');
+    } else if (savedLang == 'fr') {
+      _locale = const Locale('fr');
+    } else if (savedLang == 'de') {
+      _locale = const Locale('de');
+    } else if (savedLang == 'pl') {
+      _locale = const Locale('pl');
     } else {
       _locale = null; // Follow system, default to English fallback
     }
@@ -84,6 +96,12 @@ class _AppState extends State<App> {
         Locale('en'), // English (Default)
         Locale('id'), // Indonesian
         Locale('zh'), // Chinese
+        Locale('ru'), // Russian
+        Locale('pt'), // Portuguese (Brazil)
+        Locale('ja'), // Japanese
+        Locale('fr'), // French
+        Locale('de'), // German
+        Locale('pl'), // Polish
       ],
       localeResolutionCallback: (deviceLocale, supportedLocales) {
         if (_locale != null) {

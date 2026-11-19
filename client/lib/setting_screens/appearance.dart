@@ -29,6 +29,18 @@ class _AppearancePageState extends State<AppearancePage> {
       newLocale = const Locale('id');
     } else if (lang == 'zh') {
       newLocale = const Locale('zh');
+    } else if (lang == 'ru') {
+      newLocale = const Locale('ru');
+    } else if (lang == 'pt') {
+      newLocale = const Locale('pt');
+    } else if (lang == 'ja') {
+      newLocale = const Locale('ja');
+    } else if (lang == 'fr') {
+      newLocale = const Locale('fr');
+    } else if (lang == 'de') {
+      newLocale = const Locale('de');
+    } else if (lang == 'pl') {
+      newLocale = const Locale('pl');
     } else {
       newLocale = null;
     }
@@ -85,6 +97,48 @@ class _AppearancePageState extends State<AppearancePage> {
                   title: const Text('中文'),
                   subtitle: const Text('Chinese'),
                   value: 'zh',
+                  groupValue: _selectedLang,
+                  onChanged: _onLangChanged,
+                ),
+                RadioListTile<String>(
+                  title: const Text('Русский'),
+                  subtitle: const Text('Russian'),
+                  value: 'ru',
+                  groupValue: _selectedLang,
+                  onChanged: _onLangChanged,
+                ),
+                RadioListTile<String>(
+                  title: const Text('Português (Brasil)'),
+                  subtitle: const Text('Portuguese'),
+                  value: 'pt',
+                  groupValue: _selectedLang,
+                  onChanged: _onLangChanged,
+                ),
+                RadioListTile<String>(
+                  title: const Text('日本語'),
+                  subtitle: const Text('Japanese'),
+                  value: 'ja',
+                  groupValue: _selectedLang,
+                  onChanged: _onLangChanged,
+                ),
+                RadioListTile<String>(
+                  title: const Text('Français'),
+                  subtitle: const Text('French'),
+                  value: 'fr',
+                  groupValue: _selectedLang,
+                  onChanged: _onLangChanged,
+                ),
+                RadioListTile<String>(
+                  title: const Text('Deutsch'),
+                  subtitle: const Text('German'),
+                  value: 'de',
+                  groupValue: _selectedLang,
+                  onChanged: _onLangChanged,
+                ),
+                RadioListTile<String>(
+                  title: const Text('Polski'),
+                  subtitle: const Text('Polish'),
+                  value: 'pl',
                   groupValue: _selectedLang,
                   onChanged: _onLangChanged,
                 ),

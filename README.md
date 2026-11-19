@@ -104,7 +104,7 @@ The script extracts the latest 64-bit release into `%LOCALAPPDATA%\vTablet`, add
 - **Windows Host Support:**
   - Emulates native pointer devices via Windows Synthetic Pointer APIs.
 - **Modern Client (Flutter 3):**
-  - Multilingual support: English (Default), Bahasa Indonesia (ID), and Chinese (ZH).
+  - Multilingual support: English (Default), Bahasa Indonesia (ID), Chinese (ZH), Russian (RU), Portuguese (PT-BR), Japanese (JA), French (FR), German (DE), and Polish (PL).
   - In-app language switcher under the Appearance tab.
   - Up to 8192 levels of pressure sensitivity and tilt support.
   - Capacitive phone touch fallback pressure for non-stylus devices.

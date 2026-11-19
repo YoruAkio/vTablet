@@ -12,6 +12,12 @@
   "appearanceLanguageEn": "English",
   "appearanceLanguageId": "Bahasa Indonesia",
   "appearanceLanguageZh": "中文 (Chinese)",
+  "appearanceLanguageRu": "Русский (Russian)",
+  "appearanceLanguagePt": "Português (Brasil)",
+  "appearanceLanguageJa": "日本語 (Japanese)",
+  "appearanceLanguageFr": "Français (French)",
+  "appearanceLanguageDe": "Deutsch (German)",
+  "appearanceLanguagePl": "Polski (Polish)",
 
   "connectionPageTitle": "Connection",
   "connectionFirstTitle": "Connect to Server",

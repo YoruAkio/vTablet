@@ -1,0 +1,86 @@
+{
+  "aboutPageTitle": "À propos",
+  "aboutSoftwareInfoTitle": "Informations sur le logiciel",
+  "aboutUpdateCheckTitle": "Vérifier les mises à jour",
+  "aboutDonateTitle": "Faire un don",
+  "aboutGithubBtn": "Voir le dépôt GitHub",
+
+  "appearancePageTitle": "Apparence",
+  "appearancePageContext": "Paramètres d'apparence",
+  "appearanceLanguageTitle": "Langue",
+  "appearanceLanguageSystem": "Langue du système",
+  "appearanceLanguageEn": "English (Anglais)",
+  "appearanceLanguageId": "Bahasa Indonesia (Indonésien)",
+  "appearanceLanguageZh": "中文 (Chinois)",
+  "appearanceLanguageRu": "Русский (Russe)",
+  "appearanceLanguagePt": "Português (Portugais)",
+  "appearanceLanguageJa": "日本語 (Japonais)",
+  "appearanceLanguageFr": "Français",
+  "appearanceLanguageDe": "Deutsch (Allemand)",
+  "appearanceLanguagePl": "Polski (Polonais)",
+
+  "connectionPageTitle": "Connexion",
+  "connectionFirstTitle": "Connexion au serveur",
+  "connectionServer": "Serveur",
+  "connectionConnectBtn": "Connecter",
+  "connectionDisconnectBtn": "Déconnecter",
+  "connectionState": "État de la connexion",
+  "connectionStateConnected": "Connecté",
+  "connectionStateDisconnected": "Déconnecté",
+  "connectionMonitor": "Écran {uid} : {width}x{height}",
+  "@connectionMonitor": {
+    "placeholders": {
+      "uid": {
+        "type": "String",
+        "example": "ffffff"
+      },
+      "width": {
+        "type": "int",
+        "example": "1920"
+      },
+      "height": {
+        "type": "int",
+        "example": "1080"
+      }
+    }
+  },
+  "connectionReconnectBtn": "Reconnecter",
+
+  "controlPageTitle": "Contrôles",
+  "controlAriaTitle": "Zone de saisie",
+  "controlAriaScaleLabel": "Échelle",
+  "controlAriaOffsetXLabel": "Décalage X",
+  "controlAriaOffsetYLabel": "Décalage Y",
+  "controlInputTypeTitle": "Type d'entrée",
+  "controlInputTypenamePen": "Stylet",
+  "controlInputTypenameTouch": "Tactile",
+  "controlInputTypenameMouse": "Souris",
+  "controlInputIgnoreClick": "Ignorer la pression",
+  "controlOtherTitle": "Autres paramètres",
+  "controlPreventSleep": "Empêcher la mise en veille",
+
+  "clickAgainToExit": "Appuyez à nouveau sur retour pour quitter.",
+  "lostConnect": "Déconnecté du serveur",
+  "connectFirstPlease": "Veuillez d'abord vous connecter au serveur",
+
+  "succeedConnected": "Serveur trouvé : {url}",
+  "@succeedConnected": {
+    "placeholders": {
+      "url": {
+        "type": "String",
+        "example": "localhost"
+      }
+    }
+  },
+  "failedConnected": "Le serveur ne répond pas : {url}",
+  "@failedConnected": {
+    "placeholders": {
+      "url": {
+        "type": "String",
+        "example": "localhost"
+      }
+    }
+  },
+
+  "helpBtn": "Documentation d'aide"
+}
