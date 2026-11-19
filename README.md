@@ -25,58 +25,102 @@
   </p>
 
   <p>
-    <a href="#-quick-downloads">Quick Downloads</a> •
-    <a href="#-features">Features</a> •
-    <a href="#-linux-setup-wayland--hyprland">Linux Setup</a> •
-    <a href="#-windows-setup">Windows Setup</a> •
-    <a href="#-client-setup-android--web">Client Setup</a> •
-    <a href="#-recommended-settings-for-osu">osu! Guide</a>
+    <a href="#quick-downloads">Quick Downloads</a> •
+    <a href="#installation">Installation</a> •
+    <a href="#features">Features</a> •
+    <a href="#linux-setup-wayland--hyprland">Linux Setup</a> •
+    <a href="#windows-setup">Windows Setup</a> •
+    <a href="#client-setup-android--web">Client Setup</a> •
+    <a href="#recommended-settings-for-osu">osu! Guide</a>
   </p>
 
 </div>
 
 ---
 
-## 📦 Quick Downloads
+## Quick Downloads
 
-Get the pre-compiled binaries and installable APK from the [Latest Release](https://github.com/YoruAkio/vTablet/releases/latest):
+Pre-compiled binaries and installable APK packages are available from the [Latest Release](https://github.com/YoruAkio/vTablet/releases/latest):
 
 | Target | File | Description |
 | :--- | :--- | :--- |
-| **Android Client** | [`vTablet-client-android.apk`](https://github.com/YoruAkio/vTablet/releases/latest) | Installable APK for Android phones & tablets |
+| **Android Client** | [`vTablet-client-android.apk`](https://github.com/YoruAkio/vTablet/releases/latest) | Installable APK for Android phones and tablets |
 | **Android Bundle** | [`vTablet-client-android.aab`](https://github.com/YoruAkio/vTablet/releases/latest) | Android App Bundle |
-| **Linux Server (GUI)** | [`vtablet-linux-amd64.tar.gz`](https://github.com/YoruAkio/vTablet/releases/latest) | Linux x64 with System Tray (includes udev rules & systemd service) |
+| **Linux Server (GUI)** | [`vtablet-linux-amd64.tar.gz`](https://github.com/YoruAkio/vTablet/releases/latest) | Linux x64 with System Tray (includes udev rules and systemd service) |
 | **Linux Server (Headless)** | [`vtablet-linux-headless-amd64.tar.gz`](https://github.com/YoruAkio/vTablet/releases/latest) | Pure Go, Zero-CGO headless binary (ideal for background services) |
 | **Windows Server** | [`vtablet-windows-amd64.zip`](https://github.com/YoruAkio/vTablet/releases/latest) | Windows 64-bit host server |
 
 ---
 
-## ✨ Features
+## Installation
 
-- **🐧 First-Class Linux Support (Wayland & Hyprland):**
+### Linux (Automated Bash Installer)
+
+Run the automated installer to download the binary, configure `/dev/uinput` udev rules, set user group permissions, and install the systemd user service:
+
+```bash
+curl -fsSL https://raw.githubusercontent.com/YoruAkio/vTablet/main/install.sh | bash
+```
+
+Or from a local clone of this repository:
+
+```bash
+chmod +x install.sh
+./install.sh
+```
+
+Available installer options:
+- `--headless`: Install the headless server with zero external shared library dependencies (default).
+- `--gui`: Install the GUI version with system tray integration (requires GTK and libayatana-appindicator).
+- `--user`: Install binary to `~/.local/bin` instead of `/usr/local/bin`.
+- `--service`: Enable and start the systemd user service immediately.
+
+---
+
+### Windows (Automated PowerShell Installer)
+
+Open PowerShell and run the installer:
+
+```powershell
+irm https://raw.githubusercontent.com/YoruAkio/vTablet/main/install.ps1 | iex
+```
+
+Or from a local clone of this repository:
+
+```powershell
+powershell -ExecutionPolicy Bypass -File .\install.ps1
+```
+
+The script extracts the latest 64-bit release into `%LOCALAPPDATA%\vTablet`, adds the directory to your user `PATH`, and creates a Start Menu shortcut.
+
+---
+
+## Features
+
+- **Linux Support (Wayland & Hyprland):**
   - Direct kernel-level absolute pointer emulation via `/dev/uinput`.
-  - Works out of the box with **Mango WM**, **Hyprland**, **Sway**, **KDE Plasma**, and **GNOME**.
+  - Native compatibility with Mango WM, Hyprland, Sway, KDE Plasma, and GNOME.
   - Sub-millisecond input latency with atomic event batching.
-- **🪟 Windows Host Support:**
+- **Windows Host Support:**
   - Emulates native pointer devices via Windows Synthetic Pointer APIs.
-- **📱 Modern Client (Flutter 3):**
-  - **Multilingual Support:** English (Default), Bahasa Indonesia (ID), and Chinese (ZH).
-  - **In-App Language Switcher:** Easily switch between System Default, English, Indonesian, and Chinese in the Appearance tab.
+- **Modern Client (Flutter 3):**
+  - Multilingual support: English (Default), Bahasa Indonesia (ID), and Chinese (ZH).
+  - In-app language switcher under the Appearance tab.
   - Up to 8192 levels of pressure sensitivity and tilt support.
   - Capacitive phone touch fallback pressure for non-stylus devices.
   - Active area aspect-ratio scaling and offset customization.
-- **⚡ Automatic USB Tethering (ADB):**
+- **Automatic USB Tethering (ADB):**
   - Automatic reverse port forwarding (`adb reverse`) for zero-configuration, plug-and-play USB connection.
-- **⚙️ Headless Daemon:**
+- **Headless Daemon:**
   - Lightweight headless mode (`-headless`) for running as a background systemd user service without requiring a GUI tray.
 
 ---
 
-## 🐧 Linux Setup (Wayland / Hyprland)
+## Linux Setup (Wayland / Hyprland)
 
-### 1. Configure `/dev/uinput` Permissions
+### 1. Manual `/dev/uinput` Permissions (Alternative to Installer)
 
-To allow `vtablet` to synthesize virtual input events without running as `root`:
+If you prefer configuring udev rules manually without running `install.sh`:
 
 ```bash
 # 1. Install udev rule
@@ -90,19 +134,19 @@ sudo udevadm control --reload-rules && sudo udevadm trigger
 ```
 
 > [!NOTE]
-> Log out and log back in (or restart) for the group membership change to take effect.
+> Log out and log back in (or reboot) for the group membership change to take effect.
 
 ### 2. Running the Server
 
 ```bash
 # Headless mode (recommended for Wayland / tiling window managers)
-./vtablet -headless
+vtablet -headless
 
 # Headless mode with verbose packet logging
-./vtablet -headless -verbose
+vtablet -headless -verbose
 
 # GUI mode with system tray (requires libayatana-appindicator / GTK)
-./vtablet
+vtablet
 ```
 
 ### 3. Hyprland Configuration (Optional)
@@ -119,7 +163,7 @@ device {
 
 ### 4. Running as a `systemd` User Service
 
-To have the server start automatically when your session starts:
+To have the server start automatically when your graphical session starts:
 
 ```bash
 mkdir -p ~/.config/systemd/user
@@ -130,35 +174,35 @@ systemctl --user enable --now vtablet.service
 
 ---
 
-## 🪟 Windows Setup
+## Windows Setup
 
-1. Download [`vtablet-windows-amd64.zip`](https://github.com/YoruAkio/vTablet/releases/latest) from the Releases page.
-2. Extract the archive and launch `vtablet-windows-amd64.exe`.
-3. The server will start and minimize to the system tray. To run headless, launch it from PowerShell/CMD with `-headless`:
+1. Download [`vtablet-windows-amd64.zip`](https://github.com/YoruAkio/vTablet/releases/latest) from the Releases page (or use `install.ps1`).
+2. Extract the archive and launch `vtablet.exe`.
+3. The server will start and minimize to the system tray. To run headless, launch it from PowerShell or Command Prompt with `-headless`:
    ```powershell
-   .\vtablet-windows-amd64.exe -headless
+   vtablet.exe -headless
    ```
 
 ---
 
-## 📱 Client Setup (Android & Web)
+## Client Setup (Android & Web)
 
 ### USB Connection (Fastest & Lowest Latency)
 
 1. Enable **USB Debugging** in Android Developer Options on your mobile device.
 2. Connect your device to your PC with a USB cable.
-3. Start the `vtablet` server. The server will automatically detect the device, configure `adb reverse tcp:23052 tcp:23052`, and open the client.
+3. Start the `vtablet` server. The server will automatically detect the device, configure `adb reverse tcp:23052 tcp:23052`, and launch the client web app or native application.
 4. Open the installed **vTablet Android App** and tap **Connect**.
 
 ### Wi-Fi Connection
 
-1. Ensure both your PC and phone/tablet are on the same Wi-Fi network.
+1. Ensure both your PC and phone/tablet are connected to the same local network.
 2. Open the vTablet app and enter your PC's local IP address and port `23052` (e.g., `192.168.1.100:23052`).
 3. Tap **Connect**.
 
 ---
 
-## 🎯 Recommended Settings for *osu!*
+## Recommended Settings for osu!
 
 When playing *osu!* on Linux (via Wine / Proton / Lutris):
 
@@ -168,7 +212,7 @@ When playing *osu!* on Linux (via Wine / Proton / Lutris):
 
 ---
 
-## 🔌 Protocol
+## Protocol
 
 Packets are transmitted over WebSocket in compact 8-byte big-endian binary frames:
 
@@ -188,6 +232,6 @@ Packets are transmitted over WebSocket in compact 8-byte big-endian binary frame
 
 ---
 
-## 📄 License
+## License
 
 This project is open-source software licensed under the [MIT License](LICENSE).
