@@ -25,7 +25,6 @@
   </p>
 
   <p>
-    <a href="#quick-downloads">Quick Downloads</a> •
     <a href="#installation">Installation</a> •
     <a href="#features">Features</a> •
     <a href="#linux-setup-wayland--hyprland">Linux Setup</a> •
@@ -33,22 +32,7 @@
     <a href="#client-setup-android--web">Client Setup</a> •
     <a href="#recommended-settings-for-osu">osu! Guide</a>
   </p>
-
 </div>
-
----
-
-## Quick Downloads
-
-Pre-compiled binaries and installable APK packages are available from the [Latest Release](https://github.com/YoruAkio/vTablet/releases/latest):
-
-| Target | File | Description |
-| :--- | :--- | :--- |
-| **Android Client** | [`vTablet-client-android.apk`](https://github.com/YoruAkio/vTablet/releases/latest) | Installable APK for Android phones and tablets |
-| **Android Bundle** | [`vTablet-client-android.aab`](https://github.com/YoruAkio/vTablet/releases/latest) | Android App Bundle |
-| **Linux Server (GUI)** | [`vtablet-linux-amd64.tar.gz`](https://github.com/YoruAkio/vTablet/releases/latest) | Linux x64 with System Tray (includes udev rules and systemd service) |
-| **Linux Server (Headless)** | [`vtablet-linux-headless-amd64.tar.gz`](https://github.com/YoruAkio/vTablet/releases/latest) | Pure Go, Zero-CGO headless binary (ideal for background services) |
-| **Windows Server** | [`vtablet-windows-amd64.zip`](https://github.com/YoruAkio/vTablet/releases/latest) | Windows 64-bit host server |
 
 ---
 
@@ -59,14 +43,14 @@ Pre-compiled binaries and installable APK packages are available from the [Lates
 Run the automated installer to download the binary, configure `/dev/uinput` udev rules, set user group permissions, and install the systemd user service:
 
 ```bash
-curl -fsSL https://raw.githubusercontent.com/YoruAkio/vTablet/main/install.sh | bash
+curl -fsSL https://raw.githubusercontent.com/YoruAkio/vTablet/main/scripts/install.sh | bash
 ```
 
 Or from a local clone of this repository:
 
 ```bash
-chmod +x install.sh
-./install.sh
+chmod +x scripts/install.sh
+./scripts/install.sh
 ```
 
 Available installer options:
@@ -82,13 +66,13 @@ Available installer options:
 Open PowerShell and run the installer:
 
 ```powershell
-irm https://raw.githubusercontent.com/YoruAkio/vTablet/main/install.ps1 | iex
+irm https://raw.githubusercontent.com/YoruAkio/vTablet/main/scripts/install.ps1 | iex
 ```
 
 Or from a local clone of this repository:
 
 ```powershell
-powershell -ExecutionPolicy Bypass -File .\install.ps1
+powershell -ExecutionPolicy Bypass -File .\scripts\install.ps1
 ```
 
 The script extracts the latest 64-bit release into `%LOCALAPPDATA%\vTablet`, adds the directory to your user `PATH`, and creates a Start Menu shortcut.
@@ -120,7 +104,7 @@ The script extracts the latest 64-bit release into `%LOCALAPPDATA%\vTablet`, add
 
 ### 1. Manual `/dev/uinput` Permissions (Alternative to Installer)
 
-If you prefer configuring udev rules manually without running `install.sh`:
+If you prefer configuring udev rules manually without running `scripts/install.sh`:
 
 ```bash
 # 1. Install udev rule
@@ -176,7 +160,7 @@ systemctl --user enable --now vtablet.service
 
 ## Windows Setup
 
-1. Download [`vtablet-windows-amd64.zip`](https://github.com/YoruAkio/vTablet/releases/latest) from the Releases page (or use `install.ps1`).
+1. Download [`vtablet-windows-amd64.zip`](https://github.com/YoruAkio/vTablet/releases/latest) from the Releases page (or use `scripts/install.ps1`).
 2. Extract the archive and launch `vtablet.exe`.
 3. The server will start and minimize to the system tray. To run headless, launch it from PowerShell or Command Prompt with `-headless`:
    ```powershell

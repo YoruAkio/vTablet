@@ -46,27 +46,37 @@ if ($runningProcesses) {
     }
 }
 
-# 3. Download release zip
+# 3. Locate local binary or download release zip
+$scriptDir = $PSScriptRoot
+$repoRoot = if ($scriptDir) { Split-Path -Parent $scriptDir } else { $null }
+$localExe = if ($repoRoot) { Join-Path $repoRoot "server\vtablet.exe" } else { $null }
+
 $tempDir = Join-Path ([System.IO.Path]::GetTempPath()) ("vtablet-install-" + [System.Guid]::NewGuid().ToString("N"))
 New-Item -ItemType Directory -Path $tempDir -Force | Out-Null
 
 try {
-    $zipPath = Join-Path $tempDir $ZipName
-    Write-Info "Downloading latest release from $DownloadUrl..."
+    if ($localExe -and (Test-Path $localExe)) {
+        Write-Info "Found existing local build at $localExe"
+        $sourceExePath = $localExe
+    } else {
+        $zipPath = Join-Path $tempDir $ZipName
+        Write-Info "Downloading latest release from $DownloadUrl..."
 
-    # Use TLS 1.2+ for GitHub downloads
-    [Net.ServicePointManager]::SecurityProtocol = [Net.SecurityProtocolType]::Tls12 -bor [Net.SecurityProtocolType]::Tls13
-    Invoke-WebRequest -Uri $DownloadUrl -OutFile $zipPath -UseBasicParsing
+        # Use TLS 1.2+ for GitHub downloads
+        [Net.ServicePointManager]::SecurityProtocol = [Net.SecurityProtocolType]::Tls12 -bor [Net.SecurityProtocolType]::Tls13
+        Invoke-WebRequest -Uri $DownloadUrl -OutFile $zipPath -UseBasicParsing
 
-    Write-Info "Extracting archive..."
-    $extractDir = Join-Path $tempDir "extracted"
-    Expand-Archive -Path $zipPath -DestinationPath $extractDir -Force
+        Write-Info "Extracting archive..."
+        $extractDir = Join-Path $tempDir "extracted"
+        Expand-Archive -Path $zipPath -DestinationPath $extractDir -Force
 
-    # Locate the executable
-    $exeSource = Get-ChildItem -Path $extractDir -Filter "*.exe" -Recurse | Select-Object -First 1
-    if (-not $exeSource) {
-        Write-Err "Could not find an executable inside the downloaded package."
-        exit 1
+        # Locate the executable
+        $exeSource = Get-ChildItem -Path $extractDir -Filter "*.exe" -Recurse | Select-Object -First 1
+        if (-not $exeSource) {
+            Write-Err "Could not find an executable inside the downloaded package."
+            exit 1
+        }
+        $sourceExePath = $exeSource.FullName
     }
 
     # 4. Copy to target directory
@@ -75,7 +85,7 @@ try {
     }
 
     $targetExe = Join-Path $InstallDir "vtablet.exe"
-    Copy-Item -Path $exeSource.FullName -Destination $targetExe -Force
+    Copy-Item -Path $sourceExePath -Destination $targetExe -Force
     Write-Info "Installed executable to $targetExe"
 
     # 5. Add to User PATH if requested

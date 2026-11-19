@@ -39,7 +39,7 @@ show_help() {
 vTablet Linux Installer
 
 Usage:
-  ./install.sh [options]
+  ./scripts/install.sh [options]
 
 Options:
   --gui             Install the GUI version (with system tray indicator; requires GTK)
@@ -115,9 +115,13 @@ trap cleanup EXIT
 # 1. Obtain binary
 TARGET_BIN="$TMP_DIR/vtablet"
 SCRIPT_DIR="$(cd "$(dirname "${BASH_SOURCE[0]}")" 2>/dev/null && pwd || echo "")"
+REPO_ROOT="$(cd "$SCRIPT_DIR/.." 2>/dev/null && pwd || echo "")"
 
 # Check if running within a cloned repository with existing local build
-if [ -n "$SCRIPT_DIR" ] && [ -f "$SCRIPT_DIR/server/vtablet" ]; then
+if [ -n "$REPO_ROOT" ] && [ -f "$REPO_ROOT/server/vtablet" ]; then
+    log_info "Found existing local build in repository at $REPO_ROOT/server/vtablet."
+    cp "$REPO_ROOT/server/vtablet" "$TARGET_BIN"
+elif [ -n "$SCRIPT_DIR" ] && [ -f "$SCRIPT_DIR/server/vtablet" ]; then
     log_info "Found existing local build in repository at $SCRIPT_DIR/server/vtablet."
     cp "$SCRIPT_DIR/server/vtablet" "$TARGET_BIN"
 else
