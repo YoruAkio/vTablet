@@ -235,24 +235,6 @@ jobs:
             echo "**Full Changelog**: https://github.com/YoruAkio/vTablet/commits/${TAG}" >> release_notes.md
           fi
 
-          echo "" >> release_notes.md
-          echo "### Android Client" >> release_notes.md
-          echo "- **\`vTablet-client-android.apk\`**: Direct Android APK installable on phones and tablets." >> release_notes.md
-          echo "- **\`vTablet-client-android.aab\`**: Android App Bundle." >> release_notes.md
-          echo "" >> release_notes.md
-          echo "### Linux Server (Wayland / X11 / Mango WM / Hyprland)" >> release_notes.md
-          echo "- **\`vtablet-linux-amd64.tar.gz\`**: Linux 64-bit with System Tray / GUI support (includes binary, udev rules, systemd service, and instructions)." >> release_notes.md
-          echo "- **\`vtablet-linux-headless-amd64.tar.gz\`**: Linux 64-bit Headless / Zero-CGO (pure Go, no GUI/CGO libraries needed)." >> release_notes.md
-          echo "- **\`vtablet-linux-amd64\`**: Standalone Linux GUI binary." >> release_notes.md
-          echo "- **\`vtablet-linux-headless-amd64\`**: Standalone Linux Headless binary." >> release_notes.md
-          echo "" >> release_notes.md
-          echo "### Windows Server" >> release_notes.md
-          echo "- **\`vtablet-windows-amd64.zip\`**: Windows 64-bit executable (zipped)." >> release_notes.md
-          echo "- **\`vtablet-windows-amd64.exe\`**: Windows 64-bit standalone executable." >> release_notes.md
-          echo "" >> release_notes.md
-          echo "### Checksums" >> release_notes.md
-          echo "Refer to \`SHA256SUMS.txt\` for SHA-256 integrity verification of all release files." >> release_notes.md
-
       - name: Publish GitHub Release
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
