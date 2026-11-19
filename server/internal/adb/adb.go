@@ -2,10 +2,17 @@ package adb
 
 import (
 	"flag"
+	"strings"
 
 	"github.com/Teages/vTablet/internal/logger"
 	. "github.com/Teages/vTablet/internal/tools"
 	adb "github.com/zach-klippenstein/goadb"
+)
+
+const (
+	AppPackage  = "xyz.teages.vtablet"
+	AppActivity = "xyz.teages.vtablet/.MainActivity"
+	ClientUrl   = "http://vtablet.yoruakio.xyz?server=localhost:23052"
 )
 
 var (
@@ -41,6 +48,10 @@ func Exec(args ...string) {
 	RunCommand(adbPath, args...)
 }
 
+func ExecOutput(args ...string) (string, error) {
+	return RunCommandOutput(adbPath, args...)
+}
+
 func init() {
 	Exec("start-server")
 	a, err := adb.NewWithConfig(adb.ServerConfig{
@@ -55,7 +66,15 @@ func init() {
 	adbClient = a
 	AutoConnect(func(serial string) {
 		Exec("-s", serial, "reverse", "tcp:23052", "tcp:23052")
-		Exec("-s", serial, "shell", "am", "start", "-a", "android.intent.action.VIEW", "-d", "http://vtablet.yoruakio.xyz?server=localhost:23052")
+		// Check if the vTablet native client app is installed
+		out, err := ExecOutput("-s", serial, "shell", "pm", "path", AppPackage)
+		if err == nil && strings.Contains(out, "package:") {
+			logger.Log("Client app detected on %s, launching native app...", serial)
+			Exec("-s", serial, "shell", "am", "start", "-n", AppActivity, "-a", "android.intent.action.VIEW", "-d", ClientUrl)
+		} else {
+			logger.Log("Client app not found on %s, opening in browser...", serial)
+			Exec("-s", serial, "shell", "am", "start", "-a", "android.intent.action.VIEW", "-d", ClientUrl)
+		}
 	})
 }
 

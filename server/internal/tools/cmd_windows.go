@@ -22,3 +22,13 @@ func RunCommand(path string, args ...string) {
 	err := e.Run()
 	logger.Catch(err)
 }
+
+func RunCommandOutput(path string, args ...string) (string, error) {
+	exePath := strings.TrimSpace(path)
+	arg := `/c ` + exePath + " " + strings.Join(args, " ")
+	e := exec.Command("cmd", arg)
+	e.SysProcAttr = &syscall.SysProcAttr{HideWindow: true}
+	logger.Log("Running: %s %s", "cmd", arg)
+	out, err := e.Output()
+	return string(out), err
+}
