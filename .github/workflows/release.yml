@@ -131,7 +131,7 @@ jobs:
           go_version: latest
           dest: build
           prefix: vtablet
-          targets: windows/amd64,windows/386
+          targets: windows/amd64
           v: true
           x: true
           race: false
@@ -153,10 +153,8 @@ jobs:
         run: |
           mkdir -p release-windows
           cp server/build/vtablet-windows-amd64.exe release-windows/vtablet-windows-amd64.exe
-          cp server/build/vtablet-windows-386.exe release-windows/vtablet-windows-386.exe
           cd release-windows
           zip -9 vtablet-windows-amd64.zip vtablet-windows-amd64.exe
-          zip -9 vtablet-windows-386.zip vtablet-windows-386.exe
 
       - uses: actions/upload-artifact@v4
         with:
@@ -232,9 +230,7 @@ jobs:
 
           ### 🪟 Windows Server
           - **`vtablet-windows-amd64.zip`**: Windows 64-bit executable (zipped).
-          - **`vtablet-windows-386.zip`**: Windows 32-bit executable (zipped).
           - **`vtablet-windows-amd64.exe`**: Windows 64-bit standalone executable.
-          - **`vtablet-windows-386.exe`**: Windows 32-bit standalone executable.
 
           ### 🔒 Checksums
           Refer to `SHA256SUMS.txt` for SHA-256 integrity verification of all release files.

@@ -50,7 +50,7 @@ jobs:
           go_version: latest
           dest: build
           prefix: vtablet
-          targets: windows/amd64,windows/386
+          targets: windows/amd64
           v: true
           x: true
           race: false
@@ -66,11 +66,6 @@ jobs:
           files: |
             server/build/*.exe
           args: --best
-
-      - uses: actions/upload-artifact@v4
-        with:
-          name: vTablet_server_windows_386
-          path: server/build/vtablet-windows-386.exe
 
       - uses: actions/upload-artifact@v4
         with:
