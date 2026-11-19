@@ -1,0 +1,11 @@
+[Unit]
+Description=vTablet Virtual Digitizer Server
+After=graphical-session.target
+
+[Service]
+ExecStart=/usr/local/bin/vtablet -headless
+Restart=on-failure
+RestartSec=3
+
+[Install]
+WantedBy=default.target

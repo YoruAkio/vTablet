@@ -136,10 +136,12 @@ class VTabletPage extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     buildContext = context;
-    return WillPopScope(
-      onWillPop: () async {
-        readyExit();
-        return true;
+    return PopScope(
+      canPop: true,
+      onPopInvokedWithResult: (didPop, result) {
+        if (didPop) {
+          readyExit();
+        }
       },
       child: Scaffold(
         appBar: null,

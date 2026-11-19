@@ -9,58 +9,55 @@ import (
 	"net/http"
 	"strings"
 
-	"github.com/Teages/go-vdigi"
+	"github.com/Teages/vTablet/internal/pointer"
 	"golang.org/x/net/websocket"
 )
 
+var (
+	httpPort = flag.Int("port", 23052, "HTTP & WebSocket service port")
+)
+
 func initWebServices(port int) {
-	flag.Parse()
+	if *httpPort != 23052 {
+		port = *httpPort
+	}
 
 	http.HandleFunc("/", clientPage)
 	http.HandleFunc("/connect", connecter)
 
-	for i := 0; i < vdigi.GetScreens().GetScreenCount(); i++ {
-		screen, _ := vdigi.GetScreens().GetScreen(i)
+	for _, screen := range pointer.GetScreens() {
 		http.Handle(fmt.Sprintf("/digi/%s", screen.Uid), connectFactory(screen.Uid))
 	}
 
-	addr := flag.String("addr", fmt.Sprintf("0.0.0.0:%d", port), "http service address")
-	log.Fatal(http.ListenAndServe(*addr, nil))
-}
-
-type ScreenData struct {
-	Uid    string `json:"uid"`
-	Path   string `json:"path"`
-	Width  int    `json:"width"`
-	Height int    `json:"height"`
+	addr := fmt.Sprintf("0.0.0.0:%d", port)
+	log.Printf("Starting vTablet web service on %s", addr)
+	log.Fatal(http.ListenAndServe(addr, nil))
 }
 
 func connecter(w http.ResponseWriter, r *http.Request) {
 	w.Header().Set("Content-Type", "application/json")
-	w.Header().Set("Access-Control-Allow-Origin", "https://vtablet.teages.xyz")
+	w.Header().Set("Access-Control-Allow-Origin", "*")
 	w.WriteHeader(http.StatusOK)
 
-	var ans []ScreenData
-	for i := 0; i < vdigi.GetScreens().GetScreenCount(); i++ {
-		screen, _ := vdigi.GetScreens().GetScreen(i)
-		ans = append(ans, ScreenData{
-			screen.Uid,
-			fmt.Sprintf("/digi/%s", screen.Uid),
-			screen.Width,
-			screen.Height,
-		})
-	}
-	json_str, _ := json.Marshal(ans)
-	io.WriteString(w, string(json_str))
+	screens := pointer.GetScreens()
+	jsonStr, _ := json.Marshal(screens)
+	io.WriteString(w, string(jsonStr))
 }
 
 func connectFactory(screeUid string) websocket.Handler {
 	return websocket.Handler(func(c *websocket.Conn) {
-		origin := c.Config().Origin.Host
-		allows := "http://localhost:23052\n" + "https://vtablet.teages.xyz\n"
-		if !strings.Contains(allows, origin) {
-			c.Close()
-			return
+		if c.Config().Origin != nil {
+			origin := c.Config().Origin.Host
+			allows := "http://localhost:23052\n" + "https://vtablet.teages.xyz\n"
+			if origin != "" && !strings.Contains(allows, origin) &&
+				!strings.HasPrefix(origin, "192.168.") &&
+				!strings.HasPrefix(origin, "10.") &&
+				!strings.HasPrefix(origin, "172.") &&
+				!strings.HasPrefix(origin, "localhost") &&
+				!strings.HasPrefix(origin, "127.0.0.1") {
+				c.Close()
+				return
+			}
 		}
 		pointerServices(screeUid, c)
 	})

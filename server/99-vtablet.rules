@@ -1,0 +1,2 @@
+# udev rule to allow non-root users in 'input' group or active session to access /dev/uinput
+KERNEL=="uinput", MODE="0660", GROUP="input", OPTIONS+="static_node=uinput", TAG+="uaccess"
