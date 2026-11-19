@@ -31,10 +31,10 @@ jobs:
           path: client/build/web
           
       - name: Publish to Cloudflare Pages
-        uses: cloudflare/pages-action@1
+        uses: cloudflare/pages-action@v1
         with:
           apiToken: ${{ secrets.CLOUDFLARE_API_TOKEN }}
-          accountId: 5b730025d7878dcd418287d4e2b66d8e
+          accountId: ${{ secrets.CLOUDFLARE_ACCOUNT_ID }}
           projectName: vtablet-app
           directory: client/build/web
           gitHubToken: ${{ secrets.GITHUB_TOKEN }}
