@@ -19,7 +19,7 @@ class Configs {
 
   static final inputEnablePen = _initConfig<bool>("input.enable.pen", true);
   static final inputEnableTouch =
-      _initConfig<bool>("input.enable.touch", false);
+      _initConfig<bool>("input.enable.touch", true);
   static final inputEnableMouse =
       _initConfig<bool>("input.enable.mouse", false);
 

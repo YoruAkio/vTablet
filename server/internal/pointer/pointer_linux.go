@@ -35,6 +35,8 @@ const (
 
 	SYN_REPORT = 0x00
 
+	BTN_LEFT     = 0x110
+	BTN_RIGHT    = 0x111
 	BTN_TOOL_PEN = 0x140
 	BTN_TOUCH    = 0x14a
 	BTN_STYLUS   = 0x14b
@@ -46,8 +48,8 @@ const (
 	ABS_TILT_X   = 0x1a
 	ABS_TILT_Y   = 0x1b
 
-	INPUT_PROP_DIRECT = 0x01
-	BUS_VIRTUAL       = 0x06
+	INPUT_PROP_POINTER = 0x00
+	BUS_VIRTUAL        = 0x06
 
 	DeviceName = "vtablet-digitizer"
 )
@@ -243,13 +245,15 @@ func Create(screenUid string) *AbsPointer {
 	ioctl(fd, UI_SET_EVBIT, EV_ABS)
 
 	// Enable keys
+	ioctl(fd, UI_SET_KEYBIT, BTN_LEFT)
+	ioctl(fd, UI_SET_KEYBIT, BTN_RIGHT)
 	ioctl(fd, UI_SET_KEYBIT, BTN_TOOL_PEN)
 	ioctl(fd, UI_SET_KEYBIT, BTN_TOUCH)
 	ioctl(fd, UI_SET_KEYBIT, BTN_STYLUS)
 	ioctl(fd, UI_SET_KEYBIT, BTN_STYLUS2)
 
-	// Set direct property
-	ioctl(fd, UI_SET_PROPBIT, INPUT_PROP_DIRECT)
+	// Set indirect pointer property (allows cursor movement across desktop/window managers)
+	ioctl(fd, UI_SET_PROPBIT, INPUT_PROP_POINTER)
 
 	// Set ABS axes
 	absAxes := []struct {
@@ -347,19 +351,22 @@ func (b *linuxUinputBackend) Update(x, y int32, pressure uint32, tiltX, tiltY in
 		y = 32767
 	}
 
+	// Emit absolute position
+	b.emit(EV_ABS, ABS_X, x)
+	b.emit(EV_ABS, ABS_Y, y)
+
 	// Tool in-range
 	b.emit(EV_KEY, BTN_TOOL_PEN, 1)
 
 	if pressure > 0 {
 		b.emit(EV_KEY, BTN_TOUCH, 1)
+		b.emit(EV_KEY, BTN_LEFT, 1)
 		b.emit(EV_ABS, ABS_PRESSURE, int32(pressure))
 	} else {
 		b.emit(EV_KEY, BTN_TOUCH, 0)
+		b.emit(EV_KEY, BTN_LEFT, 0)
 		b.emit(EV_ABS, ABS_PRESSURE, 0)
 	}
-
-	b.emit(EV_ABS, ABS_X, x)
-	b.emit(EV_ABS, ABS_Y, y)
 
 	tX := int32(float64(tiltX) * 90.0 / 32767.0)
 	tY := int32(float64(tiltY) * 90.0 / 32767.0)
@@ -379,8 +386,9 @@ func (b *linuxUinputBackend) Destroy() {
 	}
 	b.closed = true
 
-	// Lift pen
+	// Lift pen and release buttons
 	b.emit(EV_KEY, BTN_TOUCH, 0)
+	b.emit(EV_KEY, BTN_LEFT, 0)
 	b.emit(EV_KEY, BTN_TOOL_PEN, 0)
 	b.emit(EV_SYN, SYN_REPORT, 0)
 
